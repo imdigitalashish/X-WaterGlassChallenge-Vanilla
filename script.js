@@ -27,13 +27,11 @@ class Application {
         getTopPrediction: (predictions, sortBy = "probability", descending = true) => {
             if (!predictions || !predictions.length) return null;
 
-            // Sort predictions based on the specified criteria
             predictions.sort((a, b) => {
                 const comparisonValue = typeof sortBy === "function" ? sortBy(a, b) : a[sortBy] - b[sortBy];
                 return descending ? -comparisonValue : comparisonValue;
             });
 
-            // Return the top prediction
             return predictions[0];
         },
 
@@ -93,15 +91,14 @@ class Application {
         this.model = await tmImage.load(modelURL, metadataURL);
         this.maxPredictions = this.model.getTotalClasses();
 
-        const flip = true; // whether to flip the webcam
-        this.webcam = new tmImage.Webcam(200, 200, flip); // width, height, flip
-        await this.webcam.setup(); // request access to the webcam
+        const flip = true;
+        this.webcam = new tmImage.Webcam(200, 200, flip); 
+        await this.webcam.setup(); 
         await this.webcam.play();
         requestAnimationFrame(this.loop.bind(this))
-        // append elements to the DOM
         document.getElementById("webcam-container").appendChild(this.webcam.canvas);
         this.labelContainer = document.getElementById("label-container");
-        for (let i = 0; i < this.maxPredictions; i++) { // and class labels
+        for (let i = 0; i < this.maxPredictions; i++) { 
             this.labelContainer.appendChild(document.createElement("div"));
         }
     }
@@ -109,7 +106,7 @@ class Application {
 
     loop = async () => {
 
-        this.webcam.update(); // update the webcam frame
+        this.webcam.update(); 
         await this.utils.predict();
         requestAnimationFrame(this.loop.bind(this))
     }
